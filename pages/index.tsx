@@ -1,5 +1,9 @@
-import Head from "next/head";
+import { Button } from "@mui/material";
 
 export default function Home() {
-  return <div>hi</div>;
+  return (
+    <div>
+      <Button fullWidth>Hi</Button>
+    </div>
+  );
 }
