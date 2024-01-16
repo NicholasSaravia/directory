@@ -5,13 +5,11 @@ export default async function Page() {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
-  let { data: Family, error } = await supabase.from("Family").select("*");
-  let user = await supabase.auth.getSession();
+  let { data: families, error } = await supabase.from("Family").select("*");
 
-  console.log({ user });
   return (
     <div>
-      {Family?.map((family) => (
+      {families?.map((family) => (
         <div key={family.id}>{family.name}</div>
       ))}
     </div>
