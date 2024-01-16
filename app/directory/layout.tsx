@@ -12,5 +12,5 @@ export default async function Layout({
   const { data, error } = await supabase.auth.getSession();
 
   if (data.session === null || error) redirect("/");
-  return <>{children}</>;
+  return <div className="p-4">{children}</div>;
 }
