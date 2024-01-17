@@ -2,17 +2,21 @@ import { createClient } from "@/utils/supabase/server";
 import { AuthError, AuthOtpResponse } from "@supabase/supabase-js";
 import { SignInForm } from "./components/SignInForm";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  const { error } = await supabase.auth.getSession();
+  if (error === null) redirect("/directory");
+
   const signInHandler = async (
     email: string,
     secretCode: string,
     redirectUrl: string
   ): Promise<AuthOtpResponse> => {
     "use server";
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-
     if (secretCode !== process.env.AUTH_SECRET_CODE)
       return {
         error: JSON.stringify(new AuthError("Invalid secret code")),

@@ -8,10 +8,14 @@ export default async function Page() {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
-  let { data: families } = await supabase.from("Family").select("*");
+  let { data: families } = await supabase
+    .from("Family")
+    .select("*")
+    .order("name");
 
   return (
     <div className="flex flex-col gap-8">
+      <h1 className="text-3xl font-bold capitalize">FBC Directory</h1>
       <Search />
       <Month />
       <Families families={families} />
