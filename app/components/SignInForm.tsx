@@ -13,7 +13,7 @@ export const SignInForm = () => {
   return (
     <>
       <form
-        className="flex flex-col bg-opacity-70 mb-8 justify-between shadow-lg gap-2 min-h-96 w-full max-w-96 border border-green-800 bg-white p-4 rounded-lg"
+        className="flex flex-col bg-opacity-70 mb-8 justify-between shadow-lg w-full max-w-96 border border-green-800 bg-white px-8 pb-10 pt-8 rounded-lg"
         onSubmit={async (e) => {
           e.preventDefault();
           setLoading(true);
@@ -39,8 +39,13 @@ export const SignInForm = () => {
           setLoading(false);
         }}
       >
-        <div className="w-full flex flex-col gap-2">
-          <h1 className="text-2xl font-bold self-center uppercase">Sign In</h1>
+        <h1 className="text-2xl font-bold self-center uppercase mb-0.5 text-black">
+          FBC DIRECTORY
+        </h1>
+        <h1 className="text-2xl font-bold self-center uppercase mb-8">
+          Sign In
+        </h1>
+        <div className="flex flex-col gap-2 mb-12">
           <div className="flex flex-col">
             <label className="font-semibold" htmlFor="email">
               Email
@@ -62,6 +67,7 @@ export const SignInForm = () => {
             />
           </div>
         </div>
+
         <button className="btn-primary w-2/3 self-center " disabled={loading}>
           Submit
         </button>

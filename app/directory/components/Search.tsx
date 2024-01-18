@@ -4,7 +4,7 @@ export const Search = () => {
     <input
       type="search"
       placeholder="Search"
-      className="w-full self-center mx-auto max-w-[500px]"
+      className="w-full self-center px-4 py-2 rounded-full mx-auto max-w-[500px]"
     />
   );
 };

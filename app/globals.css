@@ -6,11 +6,18 @@
   input {
     @apply text-black border border-gray-500 px-2 py-1 rounded-md;
   }
+  label{
+    @apply text-green-900
+  }
+  h1,h2,h3,h4{
+    @apply text-green-900
+  
+  }
 }
 
 @layer components{
   .btn-primary {
-    @apply border border-green-800 text-black px-2 py-1 rounded-full shadow-sm hover:shadow-lg font-bold uppercase transform transition-shadow duration-200;
+    @apply border bg-white border-green-800 text-green-900 px-2 py-1 rounded-full shadow-sm hover:shadow-lg font-bold uppercase transform transition-shadow duration-200;
   }
 }
 
