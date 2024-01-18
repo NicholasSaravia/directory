@@ -1,16 +1,8 @@
 "use client";
-import { AuthOtpResponse } from "@supabase/supabase-js";
 import { useState } from "react";
+import { signInHandler } from "../actions";
 
-interface SignInFormProps {
-  signInHandler: (
-    email: string,
-    secretCode: string,
-    redirectUrl: string
-  ) => Promise<AuthOtpResponse>;
-}
-
-export const SignInForm = ({ signInHandler }: SignInFormProps) => {
+export const SignInForm = () => {
   const [email, setEmail] = useState("");
   const [secretCode, setSecretCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,7 +13,7 @@ export const SignInForm = ({ signInHandler }: SignInFormProps) => {
   return (
     <>
       <form
-        className="flex flex-col gap-2 max-w-60 border p-4 rounded-lg"
+        className="flex flex-col bg-opacity-70 mb-8 justify-between shadow-lg gap-2 min-h-96 w-full max-w-96 border border-green-800 bg-white p-4 rounded-lg"
         onSubmit={async (e) => {
           e.preventDefault();
           setLoading(true);
@@ -42,32 +34,54 @@ export const SignInForm = ({ signInHandler }: SignInFormProps) => {
 
           setTimeout(() => {
             setSignUpStatus("DEFAULT");
-          }, 3000);
+          }, 5000);
 
           setLoading(false);
         }}
       >
-        <input
-          type="email"
-          placeholder="Email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Secret Code"
-          onChange={(e) => setSecretCode(e.target.value)}
-        />
-        <button className="btn-primary" disabled={loading}>
-          Sign In via magic link
+        <div className="w-full flex flex-col gap-2">
+          <h1 className="text-2xl font-bold self-center uppercase">Sign In</h1>
+          <div className="flex flex-col">
+            <label className="font-semibold" htmlFor="email">
+              Email
+            </label>
+            <input
+              type="email"
+              placeholder="john.smith@gmail.com"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="font-semibold" htmlFor="code">
+              Code
+            </label>
+            <input
+              type="text"
+              placeholder="123456"
+              onChange={(e) => setSecretCode(e.target.value)}
+            />
+          </div>
+        </div>
+        <button className="btn-primary w-2/3 self-center " disabled={loading}>
+          Submit
         </button>
       </form>
       {signUpStatus === "ERROR" && (
-        <div>Something went wrong submitting your request</div>
+        <div
+          role="alert"
+          className="border py-2 px-8 text-center rounded-full bg-white shadow-lg"
+        >
+          <p>Something went wrong signing you in.</p>
+          <p>was the code you entered correct?</p>
+        </div>
       )}
       {signUpStatus === "SUCCESS" && (
-        <div>
-          Check your email for a magic link to sign in. If you don&apos;t see
-          it, check your spam folder.
+        <div
+          className="border py-2 px-8 text-center rounded-full bg-white shadow-lg"
+          role="success"
+        >
+          <p>Check your email for a magic link to sign in.</p>
+          <p>If you don&apos;t see it, check your spam folder.</p>
         </div>
       )}
     </>

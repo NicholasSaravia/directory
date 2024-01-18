@@ -42,7 +42,7 @@ export const Upload = ({ familyId }: UploadProps) => {
           uploadRef.current?.click();
         }}
       >
-        <p className="text-xl text-green-800">Click Here Upload</p>
+        <p className="text-xl text-green-800">Click Here To Upload</p>
       </button>
     </>
   );

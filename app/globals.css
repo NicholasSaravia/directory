@@ -10,6 +10,13 @@
 
 @layer components{
   .btn-primary {
-    @apply bg-blue-500 text-white px-2 py-1 rounded-md;
+    @apply border border-green-800 text-black px-2 py-1 rounded-full shadow-sm hover:shadow-lg font-bold uppercase transform transition-shadow duration-200;
   }
+}
+
+.layout {
+  background-color: #ffff;
+  background-image:  radial-gradient(#166534 0.5px, transparent 0.5px), radial-gradient(#1a7a3e 0.5px, #c7d2cb 0.5px);
+  background-size: 20px 20px;
+  background-position: 0 0,10px 10px;
 }
