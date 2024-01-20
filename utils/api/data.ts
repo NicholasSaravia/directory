@@ -13,6 +13,24 @@ export const getAllFilesFromBucket = async (familyId: string) => {
   return data;
 };
 
+export const getAllPhotos = async (families: Family[]) => {
+  const { data: files, error } = await supabase.storage.from(BUCKET).list();
+  if (error) throw error;
+
+  const photPaths = files.map((file) => {
+    const family = families.find((family) => family.id == file.name);
+    return `${file.name}/${family?.photo_url}`;
+  });
+
+  const { data: photos, error: photoError } = await supabase.storage
+    .from(BUCKET)
+    .createSignedUrls(photPaths, 60 * 60 * 24);
+
+  if (photoError) throw photoError;
+
+  return photos;
+};
+
 export const getSignedUrl = async (familyId: string, photoUrl: string) => {
   const { data, error } = await supabase.storage
     .from(BUCKET)

@@ -10,3 +10,11 @@ const familySchema = object({
 });
 
 export type Family = z.infer<typeof familySchema>;
+
+const signedPhotoSchema = object({
+  error: z.string().nullable(),
+  path: z.string().nullable(),
+  signedUrl: z.string(),
+});
+
+export type SignedPhoto = z.infer<typeof signedPhotoSchema>;

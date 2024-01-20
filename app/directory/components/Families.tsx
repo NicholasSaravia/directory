@@ -2,24 +2,35 @@
 
 import { Family } from "@/types";
 import { FamilyPhoto } from "../../components/FamilyPhoto";
-import { getFamilies } from "@/utils/api/data";
+import { getAllPhotos, getFamilies } from "@/utils/api/data";
 import { searchString } from "@/utils/signals/data";
 import { useSignals } from "@preact/signals-react/runtime";
 import useSWR from "swr";
+import { useEffect, useState } from "react";
 
 export const Families = () => {
-  useSignals();
-  const { data = [] } = useSWR("families", getFamilies);
+  const [shouldFetchPhotos, setShouldFetchPhotos] = useState(false);
+  const { data: families } = useSWR("families", getFamilies);
+  const { data: photos, isLoading: fetchingPhotos } = useSWR(
+    shouldFetchPhotos ? "photos" : null,
+    () => getAllPhotos(families ?? [])
+  );
 
   const searchFilter = (family: Family) => {
     if (searchString.value === "") return true;
     return family.name.toLowerCase().includes(searchString.value);
   };
 
+  useEffect(() => {
+    if (families && families.length > 0) {
+      setShouldFetchPhotos(true);
+    }
+  }, [families]);
+
   return (
     <section className="flex flex-wrap justify-evenly gap-6">
-      {data &&
-        data.filter(searchFilter).map((family) => {
+      {families &&
+        families.filter(searchFilter).map((family) => {
           return (
             <div
               className="flex flex-col bg-white rounded-md w-full sm:max-w-[400px] gap-2 shadow-xl"
@@ -27,8 +38,10 @@ export const Families = () => {
             >
               <section className="relative h-[300px] w-full bg-gray-200 rounded-t-md ">
                 <FamilyPhoto
+                  fetchingPhotos={!shouldFetchPhotos || fetchingPhotos}
                   familyId={family.id}
-                  photoUrl={family.photo_url ?? ""}
+                  photoPath={`${family.id}/${family.photo_url}`}
+                  photos={photos}
                 />
               </section>
               <section className="px-2 pb-2">
