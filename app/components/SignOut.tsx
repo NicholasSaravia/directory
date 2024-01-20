@@ -8,7 +8,7 @@ export const SignOut = () => {
   const router = useRouter();
   return (
     <button
-      className="btn-primary px-8"
+      className="btn-primary whitespace-nowrap px-4"
       onClick={async () => {
         await supabase.auth.signOut();
         router.push("/");

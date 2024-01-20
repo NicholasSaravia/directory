@@ -1,31 +1,44 @@
+"use client";
 import { Upload } from "@/app/components/Upload";
-import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
+import { getAllFilesFromBucket, getSignedUrl } from "@/utils/api/data";
+import { createClient } from "@/utils/supabase/client";
 import Image from "next/image";
+import useSWR from "swr";
+import { Spinner } from "./icons/Spinner";
 
 interface FamilyPhotoProps {
   familyId: string;
   photoUrl: string;
 }
 
-export const FamilyPhoto = async ({ familyId, photoUrl }: FamilyPhotoProps) => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-  const bucket = "family-photos";
-  const { data: files } = await supabase.storage
-    .from(bucket)
-    .list(`${familyId}`);
+export const FamilyPhoto = ({ familyId, photoUrl }: FamilyPhotoProps) => {
+  const { data: files, isLoading: fileLoading } = useSWR(
+    `files-${familyId}`,
+    () => getAllFilesFromBucket(familyId)
+  );
+  const noFiles = files === undefined || files?.length === 0;
 
-  if (!files || files.length === 0) return <Upload familyId={familyId} />;
-  const { data } = await supabase.storage
-    .from(bucket)
-    .createSignedUrl(`${familyId}/${photoUrl}`, 60 * 60);
+  const { data, isLoading: signedUrlLoading } = useSWR(
+    noFiles ? null : `signed-url-${familyId}/${photoUrl}`,
+    () => getSignedUrl(familyId, photoUrl)
+  );
+
+  if (fileLoading || signedUrlLoading)
+    return (
+      <div className="flex items-center justify-center h-full w-full">
+        <Spinner className="w-32" />
+      </div>
+    );
+
+  if (noFiles || data?.signedUrl == null) return <Upload familyId={familyId} />;
 
   return (
     <Image
       fill
       className="object-cover w-full h-full object-center rounded-t-md"
-      src={data?.signedUrl ?? ""}
+      src={data.signedUrl}
+      placeholder="blur"
+      blurDataURL="/placeholder-image.webp"
       alt="family photo"
     />
   );
