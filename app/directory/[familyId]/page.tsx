@@ -3,6 +3,7 @@
 import { FamilyPhoto } from "@/app/components/FamilyPhoto";
 import { Upload } from "@/app/components/Upload";
 import { useGetFamilies, usePermissions, usePhotos } from "@/utils/api/data";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 
 const Family = () => {
@@ -17,7 +18,11 @@ const Family = () => {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="w-full relative h-[600px] shadow-sm border-4 border-green-900 border-opacity-20 rounded-2xl">
+      <Link href="/directory" className="uppercase text-green-900 font-bold">
+        Back
+      </Link>
+      <h1 className="text-3xl font-bold text-center mb-4">{family?.name}</h1>
+      <div className="w-full relative h-[300px] md:h-[600px] shadow-sm rounded-2xl">
         <FamilyPhoto
           fetchingPhotos={isLoading}
           photoPath={`${familyId}/${family?.photo_url}`}
