@@ -1,3 +1,4 @@
+import useSWR from "swr";
 import { createClient } from "../supabase/client";
 import { Family } from "@/types";
 
@@ -13,7 +14,18 @@ export const getAllFilesFromBucket = async (familyId: string) => {
   return data;
 };
 
-export const getAllPhotos = async (families: Family[]) => {
+export const usePhotos = (shouldFetchPhotos: boolean, families: Family[]) => {
+  return useSWR(
+    shouldFetchPhotos ? "/photos" : null,
+    () => getAllPhotos(families),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      refreshInterval: 0,
+    }
+  );
+};
+const getAllPhotos = async (families: Family[]) => {
   const { data: files, error } = await supabase.storage.from(BUCKET).list();
   if (error) throw error;
 
@@ -40,9 +52,16 @@ export const getSignedUrl = async (familyId: string, photoUrl: string) => {
   return data;
 };
 
-export const getFamilies = async () => {
+export const useGetFamilies = () => {
+  return useSWR("/families", getFamilies, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    refreshInterval: 0,
+  });
+};
+const getFamilies = async () => {
   const { data, error } = await supabase
-    .from("Family")
+    .from("families")
     .select<"*", Family>("*")
     .order("name");
 
@@ -52,11 +71,38 @@ export const getFamilies = async () => {
 
 export const getFamily = async (id: string) => {
   const { data, error } = await supabase
-    .from("Family")
+    .from("families")
     .select<"*", Family>("*")
     .eq("id", id)
     .single();
 
   if (error) throw error;
   return data;
+};
+
+export const getUser = async () => {
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error) throw error;
+  return data;
+};
+
+export const getUserPermissions = async () => {
+  try {
+    const data = await getUser();
+    const { data: role, error } = await supabase
+      .from("roles")
+      .select("*")
+      .eq("user_id", data.user.id)
+      .single();
+
+    if (error) throw error;
+    return role;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const usePermissions = () => {
+  return useSWR("permissions", getUserPermissions);
 };

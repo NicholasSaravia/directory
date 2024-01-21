@@ -1,24 +1,20 @@
 "use client";
-import { Upload } from "@/app/components/Upload";
-import { getAllFilesFromBucket, getSignedUrl } from "@/utils/api/data";
-import { createClient } from "@/utils/supabase/client";
 import Image from "next/image";
-import useSWR from "swr";
 import { Spinner } from "./icons/Spinner";
 import { SignedPhoto } from "@/types";
 
 interface FamilyPhotoProps {
-  familyId: string;
   photoPath: string;
   photos: SignedPhoto[] | undefined;
   fetchingPhotos: boolean;
+  className?: string;
 }
 
 export const FamilyPhoto = ({
   photoPath,
   photos,
-  familyId,
   fetchingPhotos,
+  className,
 }: FamilyPhotoProps) => {
   if (fetchingPhotos)
     return (
@@ -31,13 +27,13 @@ export const FamilyPhoto = ({
     ? photos.find((photo) => photo.path === photoPath)
     : undefined;
 
-  if (!photo) return <Upload familyId={familyId} />;
+  console.log({ photo });
 
   return (
     <Image
       fill
-      className="object-cover w-full h-full object-center rounded-t-md"
-      src={photo.signedUrl}
+      className={`object-cover w-full h-full object-center ${className}`}
+      src={!photo ? "/placeholder-image.webp" : photo.signedUrl}
       placeholder="blur"
       blurDataURL="/placeholder-image.webp"
       alt="family photo"

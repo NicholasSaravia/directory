@@ -1,14 +1,14 @@
 "use client";
 import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
 import { useRef } from "react";
+import { UploadIcon } from "./icons/Upload";
+import { mutate } from "swr";
 
 interface UploadProps {
   familyId: string;
 }
 export const Upload = ({ familyId }: UploadProps) => {
   const supabase = createClient();
-  const { refresh } = useRouter();
   const uploadRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -27,23 +27,24 @@ export const Upload = ({ familyId }: UploadProps) => {
               upsert: true,
             });
 
-          await supabase
-            .from("Family")
+          const { error } = await supabase
+            .from("families")
             .update({ photo_url: file.name })
             .eq("id", familyId)
             .select();
 
-          refresh();
+          mutate("/families");
         }}
       />
       <button
-        className="flex border-2 border-dashed rounded-t-md border-green-800 w-full h-full items-center justify-center"
-        onClick={() => {
+        className="no-navigation flex border-2 rounded-full w-min p-2  border-dashed border-green-800 h-full items-center justify-center"
+        onClick={(e) => {
+          e.stopPropagation();
           uploadRef.current?.click();
         }}
       >
         <p className="text-lg uppercase italic text-green-800">
-          Click To Upload
+          <UploadIcon />
         </p>
       </button>
     </>

@@ -2,20 +2,19 @@
 
 import { Family } from "@/types";
 import { FamilyPhoto } from "../../components/FamilyPhoto";
-import { getAllPhotos, getFamilies } from "@/utils/api/data";
+import { useGetFamilies, usePhotos } from "@/utils/api/data";
 import { searchString } from "@/utils/signals/data";
 import { useSignals } from "@preact/signals-react/runtime";
-import useSWR from "swr";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export const Families = () => {
   useSignals();
   const [shouldFetchPhotos, setShouldFetchPhotos] = useState(false);
-  const { data: families } = useSWR("families", getFamilies);
-  const { data: photos, isLoading: fetchingPhotos } = useSWR(
-    shouldFetchPhotos ? "photos" : null,
-    () => getAllPhotos(families ?? [])
+  const { data: families } = useGetFamilies();
+  const { data: photos, isLoading: fetchingPhotos } = usePhotos(
+    shouldFetchPhotos,
+    families ?? []
   );
 
   const searchFilter = (family: Family) => {
@@ -42,13 +41,13 @@ export const Families = () => {
               <section className="relative h-[300px] w-full bg-gray-200 rounded-t-md ">
                 <FamilyPhoto
                   fetchingPhotos={!shouldFetchPhotos || fetchingPhotos}
-                  familyId={family.id}
                   photoPath={`${family.id}/${family.photo_url}`}
                   photos={photos}
+                  className="rounded-t-md"
                 />
               </section>
-              <section className="px-2 pb-2">
-                <h2 className="font-bold self-start text-2xl text-green-900">
+              <section className="flex px-2 pb-2">
+                <h2 className="font-bold self-start flex-1 text-2xl text-green-900">
                   {family.name}
                 </h2>
               </section>
