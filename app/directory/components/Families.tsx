@@ -7,8 +7,10 @@ import { searchString } from "@/utils/signals/data";
 import { useSignals } from "@preact/signals-react/runtime";
 import useSWR from "swr";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export const Families = () => {
+  useSignals();
   const [shouldFetchPhotos, setShouldFetchPhotos] = useState(false);
   const { data: families } = useSWR("families", getFamilies);
   const { data: photos, isLoading: fetchingPhotos } = useSWR(
@@ -32,9 +34,10 @@ export const Families = () => {
       {families &&
         families.filter(searchFilter).map((family) => {
           return (
-            <div
+            <Link
               className="flex flex-col bg-white rounded-md w-full sm:max-w-[400px] gap-2 shadow-xl"
               key={family.id}
+              href={`/directory/${family.id}`}
             >
               <section className="relative h-[300px] w-full bg-gray-200 rounded-t-md ">
                 <FamilyPhoto
@@ -49,7 +52,7 @@ export const Families = () => {
                   {family.name}
                 </h2>
               </section>
-            </div>
+            </Link>
           );
         })}
     </section>

@@ -49,3 +49,14 @@ export const getFamilies = async () => {
   if (error) throw error;
   return data;
 };
+
+export const getFamily = async (id: string) => {
+  const { data, error } = await supabase
+    .from("Family")
+    .select<"*", Family>("*")
+    .eq("id", id)
+    .single();
+
+  if (error) throw error;
+  return data;
+};

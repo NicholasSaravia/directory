@@ -1,11 +1,11 @@
 "use client";
 import { searchString } from "@/utils/signals/data";
-import { debounce } from "lodash";
+import { debounce, throttle } from "lodash";
 export const Search = () => {
   const setSearchString = (search: string) => {
     searchString.value = search.trim().toLowerCase();
   };
-  const debouncedSearch = debounce(setSearchString, 500);
+  const debouncedSearch = throttle(setSearchString, 250);
 
   return (
     <input
