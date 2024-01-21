@@ -17,7 +17,7 @@ const Family = () => {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="w-full relative h-[600px]">
+      <div className="w-full relative h-[600px] shadow-sm border-4 border-green-900 border-opacity-20 rounded-2xl">
         <FamilyPhoto
           fetchingPhotos={isLoading}
           photoPath={`${familyId}/${family?.photo_url}`}
