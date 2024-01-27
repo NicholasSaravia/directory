@@ -4,9 +4,9 @@ import { Family } from "@/types";
 import { FamilyPhoto } from "../../components/FamilyPhoto";
 import { useGetFamilies, usePhotos } from "@/utils/api/data";
 import { searchString } from "@/utils/signals/data";
-import { useSignals } from "@preact/signals-react/runtime";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSignals } from "@preact/signals-react/runtime";
 
 export const Families = () => {
   useSignals();
@@ -41,7 +41,7 @@ export const Families = () => {
               <section className="relative h-[300px] w-full bg-gray-200 rounded-t-md ">
                 <FamilyPhoto
                   fetchingPhotos={!shouldFetchPhotos || fetchingPhotos}
-                  photoPath={`${family.id}/${family.photo_url}`}
+                  photoPath={family.photo_path}
                   photos={photos}
                   className="rounded-t-md"
                 />

@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { createClient } from "../supabase/client";
-import { Family } from "@/types";
+import { Family, Role } from "@/types";
 
 const BUCKET = "family-photos";
 const supabase = createClient();
@@ -26,13 +26,14 @@ export const usePhotos = (shouldFetchPhotos: boolean, families: Family[]) => {
   );
 };
 const getAllPhotos = async (families: Family[]) => {
-  const { data: files, error } = await supabase.storage.from(BUCKET).list();
-  if (error) throw error;
+  const photPaths = families.reduce((prev: string[], current: Family) => {
+    if (current.photo_path !== null) {
+      prev.push(current.photo_path);
+    }
+    return prev;
+  }, []);
 
-  const photPaths = files.map((file) => {
-    const family = families.find((family) => family.id == file.name);
-    return `${file.name}/${family?.photo_url}`;
-  });
+  if (photPaths.length === 0) return [];
 
   const { data: photos, error: photoError } = await supabase.storage
     .from(BUCKET)
@@ -43,10 +44,15 @@ const getAllPhotos = async (families: Family[]) => {
   return photos;
 };
 
-export const getSignedUrl = async (familyId: string, photoUrl: string) => {
+export const useGetSignedUrl = (familyId: string, photoPath: string) => {
+  return useSWR(`/signed-url-${familyId}-${photoPath}`, () =>
+    getSignedUrl(photoPath)
+  );
+};
+export const getSignedUrl = async (photoPath: string) => {
   const { data, error } = await supabase.storage
     .from(BUCKET)
-    .createSignedUrl(`${familyId}/${photoUrl}`, 60 * 60 * 24);
+    .createSignedUrl(photoPath, 60 * 60 * 24);
 
   if (error) throw error;
   return data;
@@ -69,7 +75,15 @@ const getFamilies = async () => {
   return data;
 };
 
-export const getFamily = async (id: string) => {
+export const useGetFamily = (id: string) => {
+  return useSWR(id ? `/family-${id}` : null, () => getFamily(id), {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    refreshInterval: 0,
+  });
+};
+
+const getFamily = async (id: string) => {
   const { data, error } = await supabase
     .from("families")
     .select<"*", Family>("*")
@@ -80,29 +94,18 @@ export const getFamily = async (id: string) => {
   return data;
 };
 
-export const getUser = async () => {
+export const getUserPermissions = async () => {
   const { data, error } = await supabase.auth.getUser();
 
   if (error) throw error;
-  return data;
-};
 
-export const getUserPermissions = async () => {
-  try {
-    const data = await getUser();
-    const { data: role, error } = await supabase
-      .from("roles")
-      .select("*")
-      .eq("user_id", data.user.id)
-      .single();
-
-    if (error) throw error;
-    return role;
-  } catch (error) {
-    throw error;
-  }
+  return await supabase
+    .from("roles")
+    .select<"*", Role>("*")
+    .eq("user_id", data.user.id)
+    .single();
 };
 
 export const usePermissions = () => {
-  return useSWR("permissions", getUserPermissions);
+  return useSWR("/permissions", getUserPermissions);
 };

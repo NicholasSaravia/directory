@@ -8,7 +8,7 @@ import { Spinner } from "../components/icons/Spinner";
 export default function Layout({ children }: PropsWithChildren) {
   const supabase = createClient();
   const { data, isLoading, error } = useSWR(
-    "session",
+    "/session",
     async () => await supabase.auth.getSession()
   );
 
@@ -20,7 +20,7 @@ export default function Layout({ children }: PropsWithChildren) {
     );
   }
 
-  if (!data || data?.data === null || error) {
+  if (!data || data?.data?.session === null || error) {
     redirect("/");
   }
 

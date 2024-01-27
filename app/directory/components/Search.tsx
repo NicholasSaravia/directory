@@ -3,6 +3,7 @@ import { searchString } from "@/utils/signals/data";
 import { useSignal } from "@preact/signals-react";
 import { useSignals } from "@preact/signals-react/runtime";
 import { throttle } from "lodash";
+
 export const Search = () => {
   useSignals();
   const searchBar = useSignal("");
