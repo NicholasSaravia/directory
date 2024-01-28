@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base{
-  input {
+  input, select {
     @apply text-black border border-gray-500 px-2 py-1 rounded-md;
   }
   label{

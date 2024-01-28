@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { createClient } from "../supabase/client";
-import { Family, Role } from "@/types";
+import { Family, Member, Role } from "@/types";
 
 const BUCKET = "family-photos";
 const supabase = createClient();
@@ -89,6 +89,27 @@ const getFamily = async (id: string) => {
     .select<"*", Family>("*")
     .eq("id", id)
     .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const useGetMembers = (familyId: string) => {
+  return useSWR(`/members-${familyId}`, () => getMembers(familyId));
+};
+
+const getMembers = async (familyId: string) => {
+  const { data, error } = await supabase
+    .from("members")
+    .select<"*", Member>("*")
+    .eq("family_id", familyId);
+
+  if (error) throw error;
+  return data;
+};
+
+export const insertMember = async (member: any) => {
+  const { data, error } = await supabase.from("members").insert(member);
 
   if (error) throw error;
   return data;
