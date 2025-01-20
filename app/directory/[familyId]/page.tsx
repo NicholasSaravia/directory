@@ -170,7 +170,7 @@ const AddEditMemberForm = ({ familyId }: { familyId: string }) => {
             console.log(member.error);
             return;
           }
-
+          console.log(member.data);
           await insertMember(member.data);
 
           mutate(`/members-${familyId}`);

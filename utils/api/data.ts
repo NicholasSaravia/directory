@@ -101,7 +101,7 @@ export const useGetMembers = (familyId: string) => {
 
 const getMembers = async (familyId: string) => {
   const { data, error } = await supabase
-    .from("members")
+    .from("member")
     .select<"*", Member>("*")
     .eq("family_id", familyId);
 
@@ -110,9 +110,12 @@ const getMembers = async (familyId: string) => {
 };
 
 export const insertMember = async (member: any) => {
-  const { data, error } = await supabase.from("members").insert(member);
+  const { data, error } = await supabase.from("member").insert(member);
 
-  if (error) throw error;
+  if (error) {
+    console.log(error);
+    return;
+  }
   return data;
 };
 
