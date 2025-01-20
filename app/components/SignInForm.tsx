@@ -27,6 +27,7 @@ export const SignInForm = () => {
           );
 
           if (error) {
+            console.error(error);
             setSignUpStatus("ERROR");
           } else {
             setSignUpStatus("SUCCESS");

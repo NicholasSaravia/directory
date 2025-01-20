@@ -19,7 +19,7 @@ const signedPhotoSchema = object({
 export type SignedPhoto = z.infer<typeof signedPhotoSchema>;
 
 const roleSchema = object({
-  userrole: z.enum(["ADMIN", "EDITOR", "VIEWER"]),
+  role: z.enum(["ADMIN", "EDITOR", "VIEWER"]),
   user_id: string(),
   family_id: array(string()),
 });

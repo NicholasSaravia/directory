@@ -25,15 +25,20 @@ export const Upload = ({ familyId, loadingSignal }: UploadProps) => {
 
           if (e.target.files === null) return;
           const file = e.target.files[0];
-          const { data: fileInfo } = await supabase.storage
+          const { data: fileInfo, error } = await supabase.storage
             .from("family-photos")
             .upload(`${familyId}/${file.name}`, file, {
               cacheControl: "3600",
               upsert: true,
             });
 
+          if (error) {
+            console.error(error);
+            return;
+          }
+
           const { data: family } = await supabase
-            .from("families")
+            .from("family")
             .update({
               photo_path: fileInfo ? fileInfo.path : null,
             })

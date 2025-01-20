@@ -16,6 +16,7 @@ import {
 } from "@/utils/api/data";
 import { getMonthName } from "@/utils/date";
 import { useSignal } from "@preact/signals-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { mutate } from "swr";
@@ -28,7 +29,10 @@ const Family = () => {
   const { data: members } = useGetMembers(familyId);
   const photoPath = family?.photo_path || "";
   const { data: role } = usePermissions();
-  const { data: photo } = useGetSignedUrl(familyId, photoPath);
+  const { data: photo, isLoading: loadingPhoto } = useGetSignedUrl(
+    familyId,
+    photoPath
+  );
   const uploadingPhoto = useSignal(false);
 
   return (
@@ -39,7 +43,7 @@ const Family = () => {
       <h1 className="text-3xl font-bold text-center mb-4">{family?.name}</h1>
       <div className="w-full relative h-[300px] md:h-[600px] shadow-md rounded-2xl">
         <FamilyPhoto
-          fetchingPhotos={isLoading || uploadingPhoto.value}
+          fetchingPhotos={loadingPhoto || isLoading}
           photoPath={family?.photo_path || ""}
           photos={
             photo
@@ -48,14 +52,16 @@ const Family = () => {
           }
           className="rounded-xl"
         />
-        {role?.data?.userrole === "ADMIN" && (
+        {role?.data?.role === "ADMIN" && (
           <section className="absolute bottom-2 right-2 mt-2 flex justify-end w-full">
             <Upload familyId={familyId} loadingSignal={uploadingPhoto} />
           </section>
         )}
       </div>
 
-      <p className="bg-white/40 rounded-xl p-2">{family?.description}</p>
+      {family?.description && (
+        <p className="bg-white/40 rounded-xl p-2">{family?.description}</p>
+      )}
       <div className="flex flex-col gap-2">
         {members &&
           members.map((member) => (
@@ -116,7 +122,7 @@ const Family = () => {
           ))}
       </div>
 
-      {role?.data?.userrole === "ADMIN" && (
+      {role?.data?.role === "ADMIN" && (
         <AddEditMemberForm familyId={familyId} />
       )}
     </div>

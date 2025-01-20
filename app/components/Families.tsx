@@ -1,17 +1,16 @@
 "use client";
 
 import { Family } from "@/types";
-import { FamilyPhoto } from "../../components/FamilyPhoto";
-import { useGetFamilies, usePhotos } from "@/utils/api/data";
+import { FamilyPhoto } from "./FamilyPhoto";
+import { usePhotos } from "@/utils/api/data";
 import { searchString } from "@/utils/signals/data";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSignals } from "@preact/signals-react/runtime";
 
-export const Families = () => {
+export const Families = ({ families }: { families: Family[] | null }) => {
   useSignals();
   const [shouldFetchPhotos, setShouldFetchPhotos] = useState(false);
-  const { data: families } = useGetFamilies();
   const { data: photos, isLoading: fetchingPhotos } = usePhotos(
     shouldFetchPhotos,
     families ?? []

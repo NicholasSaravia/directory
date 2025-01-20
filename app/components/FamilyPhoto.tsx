@@ -16,6 +16,7 @@ export const FamilyPhoto = ({
   fetchingPhotos,
   className,
 }: FamilyPhotoProps) => {
+
   if (fetchingPhotos)
     return (
       <div className="flex items-center justify-center h-full w-full">

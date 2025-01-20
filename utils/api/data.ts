@@ -59,15 +59,16 @@ export const getSignedUrl = async (photoPath: string) => {
 };
 
 export const useGetFamilies = () => {
-  return useSWR("/families", getFamilies, {
+  return useSWR("/family", getFamilies, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     refreshInterval: 0,
   });
 };
+
 const getFamilies = async () => {
-  const { data, error } = await supabase
-    .from("families")
+  let { data, error } = await supabase
+    .from("family")
     .select<"*", Family>("*")
     .order("name");
 
@@ -85,7 +86,7 @@ export const useGetFamily = (id: string) => {
 
 const getFamily = async (id: string) => {
   const { data, error } = await supabase
-    .from("families")
+    .from("family")
     .select<"*", Family>("*")
     .eq("id", id)
     .single();
@@ -120,8 +121,10 @@ export const getUserPermissions = async () => {
 
   if (error) throw error;
 
+  console.log(data.user.id)
+
   return await supabase
-    .from("roles")
+    .from("role")
     .select<"*", Role>("*")
     .eq("user_id", data.user.id)
     .single();
