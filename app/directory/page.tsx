@@ -1,7 +1,7 @@
-import { Search } from "../components/Search";
-import { Month } from "../components/Month";
-import { Families } from "../components/Families";
-import { SignOut } from "../components/SignOut";
+import { Search } from "@/components/Search";
+import { Month } from "@/components/Month";
+import { Families } from "@/components/Families";
+import { SignOut } from "@/components/SignOut";
 import { Family } from "@/types";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";

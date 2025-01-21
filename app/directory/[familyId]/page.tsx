@@ -1,11 +1,11 @@
 "use client";
 
-import { FamilyPhoto } from "@/app/components/FamilyPhoto";
-import { Upload } from "@/app/components/Upload";
+import { FamilyPhoto } from "@/components/FamilyPhoto";
+import { Upload } from "@/components/Upload";
 import {
   InputWithLabel,
   SelectWithLabel,
-} from "@/app/components/form/InputWithLabel";
+} from "@/components/form/InputWithLabel";
 import { FamilyRole } from "@/types";
 import {
   insertMember,
@@ -34,6 +34,14 @@ const Family = () => {
     photoPath
   );
   const uploadingPhoto = useSignal(false);
+
+  const formatPhoneNumber = (phoneNumber: string) => {
+    // Remove all non-digit characters
+    const cleaned = phoneNumber.replace(/\D/g, '');
+    
+    // Check if we have exactly 10 digits
+    return `(${cleaned.slice(0,3)}) ${cleaned.slice(3,6)}-${cleaned.slice(6)}`;
+  };
 
   return (
     <div className="flex flex-col gap-4 max-w-6xl mx-auto">
@@ -75,9 +83,14 @@ const Family = () => {
               </summary>
               <hr className="my-2 border-1 border-green-900" />
               {member.phone_number && (
-                <div>
-                  <span className="font-bold">Phone:</span>{" "}
-                  {member.phone_number}
+                <div className="flex gap-1">
+                  <span className="font-bold">Phone:</span>
+                  <a
+                    className="underline text-green-900"
+                    href={`tel:${member.phone_number}`}
+                  >
+                    {formatPhoneNumber(member.phone_number)}
+                  </a>
                 </div>
               )}
               {member.email && (

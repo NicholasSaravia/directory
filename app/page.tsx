@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import { SignInForm } from "./components/SignInForm";
+import { SignInForm } from "@/components/SignInForm";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 

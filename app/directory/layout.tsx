@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/client";
 import { redirect } from "next/navigation";
 import { PropsWithChildren } from "react";
 import useSWR from "swr";
-import { Spinner } from "../components/icons/Spinner";
+import { Spinner } from "@/components/icons/Spinner";
 
 export default function Layout({ children }: PropsWithChildren) {
   const supabase = createClient();
