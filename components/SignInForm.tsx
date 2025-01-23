@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { signInHandler } from "../actions";
+import { signInHandler } from "@/app/actions";
 
 export const SignInForm = () => {
   const [email, setEmail] = useState("");

@@ -25,6 +25,7 @@ export const usePhotos = (shouldFetchPhotos: boolean, families: Family[]) => {
     }
   );
 };
+
 const getAllPhotos = async (families: Family[]) => {
   const photPaths = families.reduce((prev: string[], current: Family) => {
     if (current.photo_path !== null) {
@@ -49,6 +50,7 @@ export const useGetSignedUrl = (familyId: string, photoPath: string) => {
     getSignedUrl(photoPath)
   );
 };
+
 export const getSignedUrl = async (photoPath: string) => {
   const { data, error } = await supabase.storage
     .from(BUCKET)
@@ -119,12 +121,46 @@ export const insertMember = async (member: any) => {
   return data;
 };
 
+export const getMembersByBirthdayOrAnniversary = async (
+  currentMonth: number
+) => {
+  let { data: member, error } = await supabase.from("member").select(`
+    *,
+    family (name)
+    `);
+
+  if (error) {
+    console.log(error);
+    return [];
+  }
+
+  // filter by anniversary and birthday regardless of year
+  const members = member?.filter((member: Member) => {
+    if (!member?.birthday && !member?.anniversary) return false;
+
+    // first check birthday
+    if (member?.birthday) {
+      const birthday = new Date(member?.birthday).getMonth() + 1;
+      if (birthday === currentMonth) return true;
+    }
+
+    // then check anniversary
+    if (member?.anniversary) {
+      const anniversary = new Date(member?.anniversary).getMonth() + 1;
+      if (anniversary === currentMonth) return true;
+    }
+
+    return false;
+  });
+  return members;
+};
+
 export const getUserPermissions = async () => {
   const { data, error } = await supabase.auth.getUser();
 
   if (error) throw error;
 
-  console.log(data.user.id)
+  console.log(data.user.id);
 
   return await supabase
     .from("role")

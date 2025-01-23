@@ -2,28 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base{
-  input, select {
+@layer base {
+  input,
+  select {
     @apply text-black border border-gray-500 px-2 py-1 rounded-md;
   }
-  label{
-    @apply text-green-900
+  label {
+    @apply text-green-900;
   }
-  h1,h2,h3,h4{
-    @apply text-green-900
-  
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-green-900;
   }
 }
 
-@layer components{
+@layer components {
   .btn-primary {
     @apply border bg-white border-green-800 text-green-900 px-2 py-1 rounded-full shadow-sm hover:shadow-lg font-bold uppercase transform transition-shadow duration-200;
   }
 }
 
 .layout {
-  background-color: #ffff;
-  background-image:  radial-gradient(#166534 0.5px, transparent 0.5px), radial-gradient(#1a7a3e 0.5px, #c7d2cb 0.5px);
+  background-color: #cbd2cea0;
+  background-image: radial-gradient(#cbd2cea0 1px, transparent 1px),
+    radial-gradient(#4a574e 1px, #cbd2cea0 1px);
   background-size: 20px 20px;
-  background-position: 0 0,10px 10px;
+  background-position: 0 0, 10px 10px;
 }
