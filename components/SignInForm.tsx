@@ -9,7 +9,6 @@ export const SignInForm = () => {
   const [signUpStatus, setSignUpStatus] = useState<
     "ERROR" | "SUCCESS" | "DEFAULT"
   >("DEFAULT");
-
   return (
     <>
       <form
@@ -18,8 +17,8 @@ export const SignInForm = () => {
           e.preventDefault();
           setLoading(true);
 
-          const redirectUrl = new URL("/auth/callback", window.location.href)
-            .href;
+          const redirectUrl = new URL("/auth/callback", location.href).href;
+          console.log({ redirectUrl });
           const { data, error } = await signInHandler(
             email,
             secretCode,
