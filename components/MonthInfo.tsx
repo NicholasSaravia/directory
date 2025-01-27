@@ -1,6 +1,6 @@
 "use client";
 
-import { Member } from "@/types";
+import { Family, Member, MemberWithFamily } from "@/types";
 import { getMembersByBirthdayOrAnniversary } from "@/utils/api/data";
 import { getMonthName } from "@/utils/date";
 import { useEffect, useState } from "react";
@@ -9,10 +9,12 @@ export const MonthInfo = ({
   members: initialMembers,
   month,
 }: {
-  members?: Member[];
+  members?: MemberWithFamily[];
   month: number;
 }) => {
-  const [members, setMembers] = useState<Member[]>(initialMembers || []);
+  const [members, setMembers] = useState<MemberWithFamily[]>(
+    initialMembers || []
+  );
   const [currentMonth, setCurrentMonth] = useState(month);
   const [monthName, setMonthName] = useState("");
   const handleClick = (month: number) => {

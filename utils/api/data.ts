@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { createClient } from "../supabase/client";
-import { Family, Member, Role } from "@/types";
+import { Family, Member, MemberWithFamily, Role } from "@/types";
 
 const BUCKET = "family-photos";
 const supabase = createClient();

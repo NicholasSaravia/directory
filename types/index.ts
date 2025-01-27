@@ -44,3 +44,10 @@ export const memberSchema = object({
 });
 
 export type Member = z.infer<typeof memberSchema>;
+
+export type MemberWithFamily = Member & {
+  familyId: string;
+  family: {
+    name: string;
+  };
+};
