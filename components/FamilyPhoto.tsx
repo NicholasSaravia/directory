@@ -16,7 +16,6 @@ export const FamilyPhoto = ({
   fetchingPhotos,
   className,
 }: FamilyPhotoProps) => {
-
   if (fetchingPhotos)
     return (
       <div className="flex items-center justify-center h-full w-full">
@@ -31,7 +30,7 @@ export const FamilyPhoto = ({
   return (
     <Image
       fill
-      className={`object-cover w-full h-full object-center ${className}`}
+      className={`object-cover w-full h-full object-[top_center] ${className}`}
       src={!photo ? "/placeholder-image.webp" : photo.signedUrl}
       alt="family photo"
     />
